@@ -32,6 +32,8 @@
 			}, this),
 			'mouseleave.owl.autoplay': $.proxy(function() {
 				if (this.core.settings.autoplayHoverPause) {
+					this.paused = false;
+
 					this.autoplay();
 				}
 			}, this)
@@ -56,7 +58,8 @@
 	 * @todo Must be documented.
 	 */
 	Autoplay.prototype.autoplay = function() {
-		if (this.core.settings.autoplay && !this.core.state.videoPlay) {
+		if (this.core.settings.autoplay && !this.core.state.videoPlay
+			&& !this.paused) {
 			window.clearInterval(this.interval);
 
 			this.interval = window.setInterval($.proxy(function() {
@@ -91,6 +94,8 @@
 			return;
 		}
 
+		this.paused = false;
+
 		this.core.next(this.core.settings.autoplaySpeed);
 	};
 
@@ -99,7 +104,7 @@
 	 * @public
 	 */
 	Autoplay.prototype.stop = function() {
-		window.clearInterval(this.interval);
+		this.pause();
 	};
 
 	/**
@@ -108,6 +113,8 @@
 	 */
 	Autoplay.prototype.pause = function() {
 		window.clearInterval(this.interval);
+
+		this.paused = true;
 	};
 
 	/**
